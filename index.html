@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Juyu Email Signature Builder</title>
+  <meta name="theme-color" content="#a2784f">
+  <meta name="description" content="Create and share a polished business email signature on any device.">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="shell">
+    <aside class="panel panel-form">
+      <div class="panel-head">
+        <p class="eyebrow">Juyu Toolkit</p>
+        <h1>Email Signature Builder</h1>
+        <p class="intro">生成高级商务版邮箱签名，支持可选社媒链接和一键复制 HTML。</p>
+      </div>
+
+      <form id="signature-form" class="form-grid">
+        <section class="form-section">
+          <h2>个人信息</h2>
+          <label>
+            <span>姓名</span>
+            <input type="text" name="fullName" value="Emma">
+          </label>
+          <label>
+            <span>职位</span>
+            <input type="text" name="jobTitle" value="Domain Name Operations Manager">
+          </label>
+          <label>
+            <span>邮箱</span>
+            <input type="email" name="email" value="emma@juyu.com">
+          </label>
+          <label>
+            <span>电话</span>
+            <input type="text" name="phone" value="+86 187 2616 7655">
+          </label>
+        </section>
+
+        <section class="form-section">
+          <h2>公司信息</h2>
+          <label>
+            <span>上传 Logo</span>
+            <input type="file" id="logo-file" accept="image/*">
+          </label>
+          <div class="inline-tools">
+            <p id="logo-source" class="helper-text">当前使用：Logo 链接</p>
+            <button type="button" id="clear-logo-upload" class="tiny-button">移除上传</button>
+          </div>
+          <label>
+            <span>官网文案</span>
+            <input type="text" name="websiteLabel" value="www.juyu.com">
+          </label>
+          <label>
+            <span>官网链接</span>
+            <input type="url" name="websiteUrl" value="https://www.juyu.com">
+          </label>
+          <label>
+            <span>Logo 链接</span>
+            <input type="url" name="logoUrl" value="https://raw.githubusercontent.com/mjding09-Eric/email-signature-assets/main/juyu-logo.png">
+          </label>
+          <label>
+            <span>公司名称</span>
+            <input type="text" name="companyName" value="AppWave Limited">
+          </label>
+          <label>
+            <span>地址第一行</span>
+            <input type="text" name="addressLine1" value="Ming Sang Industrial Building,">
+          </label>
+          <label>
+            <span>地址第二行</span>
+            <input type="text" name="addressLine2" value="19 Hing Yip Street, Kwun Tong, Kowloon">
+          </label>
+        </section>
+
+        <section class="form-section">
+          <h2>社媒链接</h2>
+          <p class="section-note">留空则不显示，适合按岗位选择性展示。</p>
+          <label>
+            <span>LinkedIn</span>
+            <input type="url" name="linkedin" placeholder="https://www.linkedin.com/in/your-name">
+          </label>
+          <label>
+            <span>Facebook</span>
+            <input type="url" name="facebook" placeholder="https://www.facebook.com/your-page">
+          </label>
+          <label>
+            <span>Instagram</span>
+            <input type="url" name="instagram" placeholder="https://www.instagram.com/your-account">
+          </label>
+          <label>
+            <span>YouTube</span>
+            <input type="url" name="youtube" placeholder="https://www.youtube.com/@your-channel">
+          </label>
+          <label>
+            <span>Telegram</span>
+            <input type="url" name="telegram" placeholder="https://t.me/your-account">
+          </label>
+          <label>
+            <span>WhatsApp</span>
+            <input type="url" name="whatsapp" placeholder="https://wa.me/your-number">
+          </label>
+        </section>
+
+        <section class="form-section form-actions">
+          <h2>操作</h2>
+          <div class="action-row">
+            <button type="button" id="copy-html">复制 HTML</button>
+            <button type="button" id="download-html" class="ghost">下载 HTML</button>
+            <button type="button" id="reset-form" class="ghost">恢复默认</button>
+          </div>
+          <div class="action-row action-row-share">
+            <button type="button" id="share-tool" class="ghost">系统分享</button>
+            <button type="button" id="copy-page-link" class="ghost">复制页面链接</button>
+          </div>
+          <p class="helper-text">本地通过 `start.command` 启动后，可把页面链接分享给同一网络下的其他设备；部署到公网后，可直接在社交软件分享。</p>
+          <div class="share-link-box">
+            <span class="share-label">当前页面</span>
+            <code id="share-url">未通过可分享链接访问</code>
+          </div>
+          <p id="status-message" class="status" aria-live="polite"></p>
+        </section>
+      </form>
+    </aside>
+
+    <main class="panel panel-preview">
+      <div class="preview-head">
+        <div>
+          <p class="eyebrow">Live Preview</p>
+          <h2>签名预览</h2>
+        </div>
+        <p class="preview-tip">右侧展示的是最终 HTML 渲染效果。</p>
+      </div>
+
+      <section class="preview-card">
+        <iframe id="signature-preview" title="Email signature preview"></iframe>
+      </section>
+
+      <section class="code-panel">
+        <div class="code-head">
+          <h2>HTML 代码</h2>
+          <button type="button" id="copy-code-inline" class="tiny-button">复制</button>
+        </div>
+        <textarea id="html-output" spellcheck="false" readonly></textarea>
+      </section>
+    </main>
+  </div>
+
+  <script src="./app.js"></script>
+</body>
+</html>

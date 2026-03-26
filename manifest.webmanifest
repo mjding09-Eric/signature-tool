@@ -1,0 +1,17 @@
+{
+  "name": "Juyu Email Signature Builder",
+  "short_name": "Juyu Signature",
+  "description": "Create and share a polished business email signature on any device.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f8f4ee",
+  "theme_color": "#a2784f",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
