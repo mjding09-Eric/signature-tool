@@ -331,6 +331,7 @@ function buildPreviewDocument(signatureHtml) {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Signature Preview</title>
+  <base target="_blank">
 </head>
 <body style="margin:0; padding:28px; background:linear-gradient(180deg, #f8f1e8 0%, #ffffff 100%);">
   ${signatureHtml}
