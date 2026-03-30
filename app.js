@@ -21,32 +21,32 @@ const socialDefinitions = [
   {
     key: "linkedin",
     label: "LinkedIn",
-    iconUrl: "https://cdn.simpleicons.org/linkedin/0A66C2",
+    iconUrl: "./assets/icons/linkedin.svg",
   },
   {
     key: "facebook",
     label: "Facebook",
-    iconUrl: "https://cdn.simpleicons.org/facebook/1877F2",
+    iconUrl: "./assets/icons/facebook.svg",
   },
   {
     key: "instagram",
     label: "Instagram",
-    iconUrl: "https://cdn.simpleicons.org/instagram/E4405F",
+    iconUrl: "./assets/icons/instagram.svg",
   },
   {
     key: "youtube",
     label: "YouTube",
-    iconUrl: "https://cdn.simpleicons.org/youtube/FF0000",
+    iconUrl: "./assets/icons/youtube.svg",
   },
   {
     key: "telegram",
     label: "Telegram",
-    iconUrl: "https://cdn.simpleicons.org/telegram/26A5E4",
+    iconUrl: "./assets/icons/telegram.svg",
   },
   {
     key: "whatsapp",
     label: "WhatsApp",
-    iconUrl: "https://cdn.simpleicons.org/whatsapp/25D366",
+    iconUrl: "./assets/icons/whatsapp.svg",
   },
 ];
 

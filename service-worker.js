@@ -1,4 +1,4 @@
-const CACHE_NAME = "signature-tool-v2";
+const CACHE_NAME = "signature-tool-v3";
 const ASSETS = [
   "./",
   "./index.html",
@@ -6,6 +6,12 @@ const ASSETS = [
   "./app.js",
   "./manifest.webmanifest",
   "./icon.svg",
+  "./assets/icons/linkedin.svg",
+  "./assets/icons/facebook.svg",
+  "./assets/icons/instagram.svg",
+  "./assets/icons/youtube.svg",
+  "./assets/icons/telegram.svg",
+  "./assets/icons/whatsapp.svg",
 ];
 
 self.addEventListener("install", (event) => {
