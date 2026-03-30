@@ -8,15 +8,16 @@
 2. 也可以在项目根目录双击 `start_signature_tool.command`
 3. 启动后浏览器会自动打开，同时终端会显示一个 `Share` 地址
 4. 在左侧填写姓名、职位、联系方式、公司信息
-5. Logo 可使用远程链接，也可直接上传本地图片并实时预览
+5. 本地上传 Logo 仅用于预览，正式导出请填写 HTTPS Logo URL
 6. 可选填写 LinkedIn、Facebook、Instagram、YouTube、Telegram、WhatsApp
 7. 在右侧预览最终效果
 8. 点击 `复制 HTML` 或 `下载 HTML`
 
 ## 注意事项
 
-- 上传的本地 Logo 会被转成嵌入式数据地址，方便直接复制预览结果
-- 如果目标邮箱客户端对嵌入式图片支持有限，可优先使用稳定的远程 Logo 链接
+- 本地上传 Logo 仅用于页面预览，不会写入正式导出的邮件签名 HTML
+- 正式导出要求至少包含：姓名、邮箱、HTTPS Logo URL
+- 邮件正式使用时，建议统一使用稳定的 HTTPS 图片地址作为 Logo 来源
 - 使用 `start.command` 启动后，同一 Wi-Fi 下的手机、平板、电脑都可以打开终端里显示的 `Share` 地址
 
 ## 分享方式

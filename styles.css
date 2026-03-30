@@ -237,6 +237,13 @@ button:active {
   transform: translateY(0);
 }
 
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+  transform: none;
+  box-shadow: none;
+}
+
 button.ghost,
 .tiny-button {
   background: rgba(255, 255, 255, 0.88);

@@ -89,6 +89,20 @@ function normalizePhoneLink(value) {
   return String(value || "").replace(/[^\d+]/g, "");
 }
 
+function isHttpsUrl(value) {
+  try {
+    const normalized = normalizeUrl(value);
+    if (!normalized) return false;
+    return new URL(normalized).protocol === "https:";
+  } catch (error) {
+    return false;
+  }
+}
+
+function isValidEmail(value) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value || "").trim());
+}
+
 function getFormData() {
   const data = Object.fromEntries(new FormData(form).entries());
   return Object.fromEntries(
@@ -96,12 +110,28 @@ function getFormData() {
   );
 }
 
-function getEffectiveLogoUrl(data) {
-  return uploadedLogoDataUrl || normalizeUrl(data.logoUrl);
+function getPreviewLogoUrl(data) {
+  if (uploadedLogoDataUrl) return uploadedLogoDataUrl;
+  if (isHttpsUrl(data.logoUrl)) return normalizeUrl(data.logoUrl);
+  return "";
+}
+
+function getExportLogoUrl(data) {
+  if (!isHttpsUrl(data.logoUrl)) return "";
+  return normalizeUrl(data.logoUrl);
 }
 
 function updateLogoSourceLabel() {
-  logoSourceLabel.textContent = uploadedLogoDataUrl ? "当前使用：已上传本地 Logo" : "当前使用：Logo 链接";
+  const data = getFormData();
+  if (uploadedLogoDataUrl) {
+    logoSourceLabel.textContent = "当前预览：本地上传 Logo（仅预览）";
+    return;
+  }
+  if (isHttpsUrl(data.logoUrl)) {
+    logoSourceLabel.textContent = "当前预览：正式 Logo URL";
+    return;
+  }
+  logoSourceLabel.textContent = "当前预览：未设置 Logo";
 }
 
 function buildAddressMarkup(data) {
@@ -151,12 +181,63 @@ function buildSocialMarkup(data) {
         </tr>`;
 }
 
-function buildSignatureHtml(data) {
+function buildLogoMarkup(logoUrl) {
+  if (!logoUrl) {
+    return `
+                <div style="width:76px; height:76px; border-radius:10px; background-color:#F6F0E7; color:#A2784F; font-size:12px; line-height:76px; text-align:center; font-weight:700;">
+                  LOGO
+                </div>`;
+  }
+
+  return `<img src="${escapeHtml(logoUrl)}" alt="Company Logo" width="76" height="76" border="0" style="display:block; width:76px; height:76px; outline:none; text-decoration:none;">`;
+}
+
+function getExportValidation(data) {
+  const errors = [];
+
+  if (!data.fullName) errors.push("请填写姓名");
+  if (!data.email) {
+    errors.push("请填写邮箱");
+  } else if (!isValidEmail(data.email)) {
+    errors.push("邮箱格式不正确");
+  }
+  if (!getExportLogoUrl(data)) {
+    errors.push("请填写正式 Logo URL，且必须为 HTTPS 地址");
+  }
+  if (data.websiteUrl && !isHttpsUrl(data.websiteUrl)) {
+    errors.push("官网链接必须为 HTTPS 地址");
+  }
+  if (data.websiteLabel && !data.websiteUrl) {
+    errors.push("填写官网文案时，请同时填写官网链接");
+  }
+
+  return {
+    valid: errors.length === 0,
+    errors,
+  };
+}
+
+function updateExportControls(validation) {
+  const shouldDisable = !validation.valid;
+  copyHtmlButton.disabled = shouldDisable;
+  copyCodeInlineButton.disabled = shouldDisable;
+  downloadButton.disabled = shouldDisable;
+}
+
+function getExportHint(validation) {
+  if (validation.valid) {
+    return "预览已更新，当前内容满足正式导出条件。";
+  }
+  return `预览已更新，正式导出不可用：${validation.errors[0]}`;
+}
+
+function buildSignatureHtml(data, options = {}) {
+  const { usePreviewLogo = false } = options;
   const emailText = data.email;
   const phoneText = data.phone;
   const websiteText = data.websiteLabel || data.websiteUrl;
   const websiteUrl = normalizeUrl(data.websiteUrl);
-  const logoUrl = escapeHtml(getEffectiveLogoUrl(data));
+  const logoUrl = usePreviewLogo ? getPreviewLogoUrl(data) : getExportLogoUrl(data);
   const companyName = data.companyName ? escapeHtml(data.companyName) : "";
   const addressMarkup = buildAddressMarkup(data);
   const socialMarkup = buildSocialMarkup(data);
@@ -202,7 +283,7 @@ function buildSignatureHtml(data) {
             <table cellpadding="0" cellspacing="0" border="0">
               <tr>
                 <td style="background-color:#FFFFFF; border:1px solid #E6DDD2; border-radius:12px; padding:12px; text-align:center;">
-                  <img src="${logoUrl}" alt="Company Logo" width="76" height="76" border="0" style="display:block; width:76px; height:76px; outline:none; text-decoration:none;">
+                  ${buildLogoMarkup(logoUrl)}
                 </td>
               </tr>
             </table>
@@ -285,16 +366,28 @@ function copyText(text) {
 
 function updatePreview() {
   const data = getFormData();
-  const signatureHtml = buildSignatureHtml(data);
-  const previewDoc = buildPreviewDocument(signatureHtml);
+  const previewHtml = buildSignatureHtml(data, { usePreviewLogo: true });
+  const exportValidation = getExportValidation(data);
+  const exportHtml = exportValidation.valid
+    ? buildSignatureHtml(data, { usePreviewLogo: false })
+    : "请填写姓名、邮箱，并提供 HTTPS Logo URL 后再导出正式 HTML。";
+  const previewDoc = buildPreviewDocument(previewHtml);
 
-  htmlOutput.value = signatureHtml;
+  htmlOutput.value = exportHtml;
   preview.srcdoc = previewDoc;
   updateLogoSourceLabel();
   updateShareUrl();
+  updateExportControls(exportValidation);
 }
 
 function downloadHtml() {
+  const data = getFormData();
+  const validation = getExportValidation(data);
+  if (!validation.valid) {
+    setStatus(validation.errors[0]);
+    return;
+  }
+
   const blob = new Blob([htmlOutput.value], { type: "text/html;charset=utf-8" });
   const url = URL.createObjectURL(blob);
   const anchor = document.createElement("a");
@@ -316,7 +409,7 @@ function resetForm() {
   uploadedLogoDataUrl = "";
   logoFileInput.value = "";
   updatePreview();
-  setStatus("已恢复默认示例内容。");
+  setStatus("已恢复为空白表单。");
 }
 
 function handleLogoUpload(event) {
@@ -332,7 +425,7 @@ function handleLogoUpload(event) {
   reader.onload = () => {
     uploadedLogoDataUrl = typeof reader.result === "string" ? reader.result : "";
     updatePreview();
-    setStatus("本地 Logo 已上传并应用到预览。");
+    setStatus("本地 Logo 已上传，仅用于预览。正式导出仍需填写 HTTPS Logo URL。");
   };
   reader.onerror = () => {
     uploadedLogoDataUrl = "";
@@ -395,8 +488,9 @@ function registerServiceWorker() {
 }
 
 form.addEventListener("input", () => {
+  const validation = getExportValidation(getFormData());
   updatePreview();
-  setStatus("签名已更新。");
+  setStatus(getExportHint(validation));
 });
 
 logoFileInput.addEventListener("change", handleLogoUpload);
@@ -405,13 +499,19 @@ clearLogoUploadButton.addEventListener("click", () => {
   uploadedLogoDataUrl = "";
   logoFileInput.value = "";
   updatePreview();
-  setStatus("已移除上传 Logo，当前使用链接地址。");
+  setStatus("已移除本地预览 Logo。正式导出仍使用 HTTPS Logo URL。");
 });
 
 shareToolButton.addEventListener("click", handleShareTool);
 copyPageLinkButton.addEventListener("click", handleCopyPageLink);
 
 copyHtmlButton.addEventListener("click", async () => {
+  const validation = getExportValidation(getFormData());
+  if (!validation.valid) {
+    setStatus(validation.errors[0]);
+    return;
+  }
+
   try {
     const copied = await copyText(htmlOutput.value);
     setStatus(copied ? "HTML 已复制到剪贴板。" : "复制失败，请手动选中代码后复制。");
@@ -421,6 +521,12 @@ copyHtmlButton.addEventListener("click", async () => {
 });
 
 copyCodeInlineButton.addEventListener("click", async () => {
+  const validation = getExportValidation(getFormData());
+  if (!validation.valid) {
+    setStatus(validation.errors[0]);
+    return;
+  }
+
   try {
     const copied = await copyText(htmlOutput.value);
     setStatus(copied ? "HTML 已复制到剪贴板。" : "复制失败，请手动选中代码后复制。");

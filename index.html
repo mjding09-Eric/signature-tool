@@ -43,11 +43,11 @@
         <section class="form-section">
           <h2>公司信息</h2>
           <label>
-            <span>上传 Logo</span>
+            <span>上传 Logo（仅预览）</span>
             <input type="file" id="logo-file" accept="image/*">
           </label>
           <div class="inline-tools">
-            <p id="logo-source" class="helper-text">当前使用：Logo 链接</p>
+            <p id="logo-source" class="helper-text">当前预览：未设置 Logo</p>
             <button type="button" id="clear-logo-upload" class="tiny-button">移除上传</button>
           </div>
           <label>
@@ -59,9 +59,10 @@
             <input type="url" name="websiteUrl" value="">
           </label>
           <label>
-            <span>Logo 链接</span>
-            <input type="url" name="logoUrl" value="">
+            <span>正式 Logo URL（HTTPS）</span>
+            <input type="url" name="logoUrl" value="" placeholder="https://assets.example.com/logo.png">
           </label>
+          <p class="helper-text">正式导出只使用 HTTPS Logo URL。本地上传图片仅用于预览，不会写入邮件签名 HTML。</p>
           <label>
             <span>公司名称</span>
             <input type="text" name="companyName" value="">
@@ -116,6 +117,7 @@
             <button type="button" id="share-tool" class="ghost">系统分享</button>
             <button type="button" id="copy-page-link" class="ghost">复制页面链接</button>
           </div>
+          <p class="helper-text">正式导出要求：姓名、邮箱、HTTPS Logo URL。</p>
           <p class="helper-text">本地通过 `start.command` 启动后，可把页面链接分享给同一网络下的其他设备；部署到公网后，可直接在社交软件分享。</p>
           <div class="share-link-box">
             <span class="share-label">当前页面</span>
@@ -144,6 +146,7 @@
           <h2>HTML 代码</h2>
           <button type="button" id="copy-code-inline" class="tiny-button">复制</button>
         </div>
+        <p class="helper-text">这里仅显示可正式导出的邮件签名 HTML。</p>
         <textarea id="html-output" spellcheck="false" readonly></textarea>
       </section>
     </main>
