@@ -38,7 +38,7 @@ def main() -> int:
         lan_url = f"http://{lan_ip}:{PORT}/"
 
         print("")
-        print("Juyu Email Signature Builder")
+        print("Email Signature Builder")
         print(f"Local: {local_url}")
         print(f"Share: {lan_url}")
         print("")

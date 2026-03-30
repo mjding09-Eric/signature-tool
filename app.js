@@ -1,14 +1,14 @@
 const defaults = {
-  fullName: "Emma",
-  jobTitle: "Domain Name Operations Manager",
-  email: "emma@juyu.com",
-  phone: "+86 187 2616 7655",
-  websiteLabel: "www.juyu.com",
-  websiteUrl: "https://www.juyu.com",
-  logoUrl: "https://raw.githubusercontent.com/mjding09-Eric/email-signature-assets/main/juyu-logo.png",
-  companyName: "AppWave Limited",
-  addressLine1: "Ming Sang Industrial Building,",
-  addressLine2: "19 Hing Yip Street, Kwun Tong, Kowloon",
+  fullName: "",
+  jobTitle: "",
+  email: "",
+  phone: "",
+  websiteLabel: "",
+  websiteUrl: "",
+  logoUrl: "",
+  companyName: "",
+  addressLine1: "",
+  addressLine2: "",
   linkedin: "",
   facebook: "",
   instagram: "",
@@ -368,7 +368,7 @@ async function handleShareTool() {
   if (navigator.share) {
     try {
       await navigator.share({
-        title: "Juyu Email Signature Builder",
+        title: "Email Signature Builder",
         text: "Business email signature builder",
         url: shareUrl,
       });

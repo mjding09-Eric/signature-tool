@@ -1,6 +1,6 @@
 {
-  "name": "Juyu Email Signature Builder",
-  "short_name": "Juyu Signature",
+  "name": "Email Signature Builder",
+  "short_name": "Signature Tool",
   "description": "Create and share a polished business email signature on any device.",
   "start_url": "./index.html",
   "display": "standalone",
